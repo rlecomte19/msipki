@@ -2,14 +2,39 @@
 
 # Partie 1 : Chiffrement symétrique avec OpenSSL
 #### \[Exercice 1.1\]
+En tapant la commande :
+```bash
+openssl help
+```
+On obtient bien les différents algorithmes (enc) et fonctions de hashage (dgst) proposées.
+enc :
+![enc](https://user-images.githubusercontent.com/72377954/146832519-f700bb36-79fc-4633-8836-5016b63a5498.png)
+dgst : 
+![dgt](https://user-images.githubusercontent.com/72377954/146832544-28f10976-b053-4004-95f0-0aad1fcc7af7.png)
+
 #### \[Exercice 1.2\]
 1. Chiffrer le fichier fichier1.txt avec un algorithme symétrique et le déchiffrer. Comparer le fichier déchiffré avec le chiffré.
+Chiffrement de fichier1.txt
 2. Visualiser le fichier en clair et le fichier chiffré avec la commande ***cat***.
 ```bash
-openssl enc --aes-128-cbc -in fichier1.txt -out fichier1.dechiffre
+openssl enc --aes-128-cbc -in fichier1.txt -out fichier.chiffre
 ```
-3. Comparer les tailles des fichiers clair et chiffré. Y a-t-il une différence ? Donner une explication.
+Déchiffrement de fichier.chiffre
+```bash
+openssl enc -d --aes-128-cbc -in fichier.chiffre -out fichier.dechiffre
+```
+Cotnenu de ces fichiers via la commande cat : 
+Fichier clair
+![fichier1txt](https://user-images.githubusercontent.com/72377954/146831881-d7575963-ddc8-44a2-88fb-ceab4bed711a.png)
+Fichier chiffré
+![fichier1chiffre](https://user-images.githubusercontent.com/72377954/146832026-92dfd5f1-c39c-447e-816d-8abd6427f57d.png)
+Fichier dechiffré
+![fichier1dechiffre](https://user-images.githubusercontent.com/72377954/146832084-d338c0b1-9bd5-4c53-92d3-2ef02a2cfcf9.png)
 
+
+3. Comparer les tailles des fichiers clair et chiffré. Y a-t-il une différence ? Donner une explication.
+Grâce à la commande ***stat*** j'ai affiché le nombre d'octets. On voit ainsi que les deux fichiers font la même taille. Il parâit logique que ce soit le cas. En effet, on chiffre par bloc mémoire. Ainsi, il y aura autant de bits à l'arrivée qu'au départ.
+![sizeoffichier1](https://user-images.githubusercontent.com/72377954/146832361-e2211bc8-ded4-4883-8d71-c8a6decfd2af.png)
 #### \[Exercice 1.3\]
 1. Le mot de passe est codé en base64 ("c2VjcmV0"). A l'aide de la commande openssl, décoder le mot de passe.
 2. Déchiffrer le fichier cryptogamics
