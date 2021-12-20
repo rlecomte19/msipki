@@ -17,7 +17,7 @@ openssl enc --aes-128-cbc -in fichier1.txt -out fichier1.dechiffre
 1. Chiffrer le fichier fichier2.txt avec l'algorithme AES en mode CBC, en utilisant le vectuer d'initialisation et la clé de votre choix.
 2. CHiffrer un fichier de votre choix, l'envoyer à l'un de vos camarades en lui précisant l'algorithme de chiffrement, le mode opératoire, la clé et le vecteur d'initialisation. Le récepteur doit déchiffrer le fichier pour voir le clair.
 
-# Partie 2 : RSA et Certificats avec OpenSSL
+# Partie 2 : RSA et Certificats avec OpenSSL
 
 #### \[Exercice 2.1\]
 Menu Firefox => Options => Vie privée et sécurité => Afficher les certificats
