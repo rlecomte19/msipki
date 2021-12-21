@@ -16,9 +16,6 @@ On obtient bien les différents algorithmes (enc) et fonctions de hashage (dgst)
 ![dgt](https://user-images.githubusercontent.com/72377954/146832544-28f10976-b053-4004-95f0-0aad1fcc7af7.png)
 
 #### \[Exercice 1.2\]
-1. Chiffrer le fichier fichier1.txt avec un algorithme symétrique et le déchiffrer. Comparer le fichier déchiffré avec le chiffré.
-Chiffrement de fichier1.txt
-2. Visualiser le fichier en clair et le fichier chiffré avec la commande ***cat***.
 ```bash
 openssl enc --aes-128-cbc -in fichier1.txt -out fichier.chiffre
 ```
@@ -51,8 +48,8 @@ On peut utiliser la commande :
 ```bash
 openssl enc -base64 -d <<< c2VjcmV0
 ```
-Cette dernière décodera le mot de passe. Ce dernier est ***secret***.
-2. Déchiffrer le fichier cryptogamics
+Cette dernière décodera le mot de passe. Le mot de passe déchiffré est ***secret***.
+
 On peut déchiffrer le fichier cryptogamics avec une commande similaire à celle de la question 1.2 :
 ```bash 
 openssl enc -d --aes-256-cbc -in cryptogramics -out cryptogramics.dechiffre
@@ -60,14 +57,12 @@ openssl enc -d --aes-256-cbc -in cryptogramics -out cryptogramics.dechiffre
 Cela nous donnera donc un déchiffrement du fichier cryptogamics. On obtient ainsi la phrase :
 > Passer au point suivant chiffrement avec clé
 #### \[Exercice 1.4\]
-1. Chiffrer le fichier fichier2.txt avec l'algorithme AES en mode CBC, en utilisant le vectuer d'initialisation et la clé de votre choix.
-Voici la commande utilisée pour un chiffrement AES en CBC par blocs de 128 bits avec une clé et un vecteur d'initialisation (32 & 32) : 
+1. Voici la commande utilisée pour un chiffrement AES en CBC par blocs de 128 bits avec une clé et un vecteur d'initialisation (32 & 32) : 
 ```bash
 openssl enc --aes-128-cbc -in fichier2.txt -out fichier2.chiffre -iv 730AEC20000000001420322325255220 -K 54F5A125000000000000000000000005
 ```
 
-2. CHiffrer un fichier de votre choix, l'envoyer à l'un de vos camarades en lui précisant l'algorithme de chiffrement, le mode opératoire, la clé et le vecteur d'initialisation. Le récepteur doit déchiffrer le fichier pour voir le clair.
-J'ai commencé par chiffrer le fichier ***'fichier2.txt'*** avec le même algorithme de chiffrement que le précédent :
+2. J'ai commencé par chiffrer le fichier ***'fichier2.txt'*** avec le même algorithme de chiffrement que le précédent :
 ```bash
 openssl enc -des-cbc -in serverConfig.cnf -out encServCfg -iv 0123456789ABCDEF -K 0123456789ABCDEF
 ```
@@ -101,19 +96,39 @@ Afin de générer les deux paires de clé on utilise :
 openssl genrsa -out Clersa.pem 4096
 openssl genrsa -out Clersa2.pem 4096
 ```
-Afin de visualiser les deux clés on utilise : 
+Afin de visualiser ces dernières on utilise : 
 ```c
 openssl rsa -in Clersa.pem -text -noout
 openssl rsa -in Clersa2.pem -text -noout
 ```
 Le nombre 65537 est le plus grand premier connu sous la forme (2^2^n + 1). Il est utilisé en RSA car ce chiffrement nécessite un nombre premier (3 marcherait aussi). Ici, du fait de sa taille, il est le plus apprécié par ce type d'algorithmes. On parle d'exposant de clé.
+
 cf : https://www.quora.com/Why-is-e-65537-used-for-most-RSA-encryption
+
 cf : https://en.wikipedia.org/wiki/65,537
 
 #### \[Exercice 2.4\]
-1. Avec la commande cat observer le contenu de l'un des deux fichiers générés (exercice précédent) puis le chiffrer avec AES. Utiliser à nouveau la commande rsa pour visualiser le contenu du fichier.
-2. Quelles sont les différences ?
-3. Que signifie chaque partie du DEK-info ?
+1. On visualise la première paire de clé générée avec ***cat*** :
+```bash
+cat ./Clersa.pem
+```
+
+![rsacle](https://user-images.githubusercontent.com/72377954/146982727-8e51f866-fd48-4551-9cfc-7d41c7714f78.png)
+
+On chiffre ensuite cette paire avec AES 128 bits en mode CBC : 
+```bash
+openssl enc --aes-128-cbc -in Clersa.pem -out Clersa.chiffre
+```
+
+On visualise ensuite ce fichier chiffré avec RSA : 
+```bash
+openssl rsa -in Clersa.chiffre -text -noout
+```
+
+2. La différence principale entre AES et RSA est la rapidité de calcul. En effet, RSA est bien plus gourmand que AES.
+
+cf : https://www.appvizer.fr/magazine/services-informatiques/protection-donnees/cryptage-aes
+
 #### \[Exercice 2.5\]
 1. Exporter les parties publiques des clés RSA générées
 2. Utiliser la commande rsa et visualiser les clés publiques. Vous devez préciser l'option -pubin puisque seule la partie publique figure dans le fichier ClersaPublique.pem.
