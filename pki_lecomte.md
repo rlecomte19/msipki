@@ -67,24 +67,49 @@ openssl enc --aes-128-cbc -in fichier2.txt -out fichier2.chiffre -iv 730AEC20000
 ```
 
 2. CHiffrer un fichier de votre choix, l'envoyer à l'un de vos camarades en lui précisant l'algorithme de chiffrement, le mode opératoire, la clé et le vecteur d'initialisation. Le récepteur doit déchiffrer le fichier pour voir le clair.
+J'ai commencé par chiffrer le fichier ***'fichier2.txt'*** avec le même algorithme de chiffrement que le précédent :
+```bash
+openssl enc -des-cbc -in serverConfig.cnf -out encServCfg -iv 0123456789ABCDEF -K 0123456789ABCDEF
+```
+Mon camarade l'a donc décodé avec la commande : 
+```bash
+openssl enc -d -des-cbc -in endcServCfg -out serverConfig.cnf -iv 0123456789ABCDEF -K 0123456789ABCDEF
+```
 
 # Partie 2 : RSA et Certificats avec OpenSSL
-
 #### \[Exercice 2.1\]
-Menu Firefox => Options => Vie privée et sécurité => Afficher les certificats
-Parcourir les certificats installés sur la machine puis en examiner un en repérant les informations ; notamment :
-* taille clé RSA
-* clé publique e
-* modulo n 
-* dates de validité
-* identification de l'organisme
+Pour cette question j'ai choisi le certificat : certSIGN Root CA G2. On y retrouve les informations suivantes :
+
+* taille clé RSA : 4096 
+* clé publique e : 
+
+C0:C5:75:19:91:7D:44:74:74:87:FE:0E:3B:96:DC:D8:01:16:CC:EE:63:91:E7:0B:6F:CE:3B:0A:69:1A:7C:C2:E3:AF:82:8E:86:D7:5E:8F:57:EB:D3:21:59:FD:39:37:42:30:BE:50:EA:B6:0F:A9:88:D8:2E:2D:69:21:E7:D1:37:18:4E:7D:91:D5:16:5F:6B:5B:00:C2:39:43:0D:36:85:52:B9:53:65:0F:1D:42:E5:8F:CF:05:D3:EE:DC:0C:1A:D9:B8:8B:78:22:67:E4:69:B0:68:C5:3C:E4:6C:5A:46:E7:CD:C7:FA:EF:C4:EC:4B:BD:6A:A4:AC:FD:CC:28:51:EF:92:B4:29:AB:AB:35:9A:4C:E4:C4:08:C6:26:CC:F8:69:9F:E4:9C:F0:29:D3:5C:F9:C6:16:25:9E:23:C3:20:C1:3D:0F:3F:38:40:B0:FE:82:44:38:AA:5A:1A:8A:6B:63:58:38:B4:15:D3:B6:11:69:7B:1E:54:EE:8C:1A:22:AC:72:97:3F:23:59:9B:C9:22:84:C1:07:4F:CC:7F:E2:57:CA:12:70:BB:A6:65:F3:69:75:63:BD:95:FB:1B:97:CD:E4:A8:AF:F6:D1:4E:A8:D9:8A:71:24:CD:36:3D:BC:96:C4:F1:6C:A9:AE:E5:CF:0D:6E:28:0D:B0:0E:B5:CA:51:7B:78:14:C3:20:2F:7F:FB:14:55:E1:11:99:FD:D5:0A:A1:9E:02:E3:62:5F:EB:35:4B:2C:B8:72:E8:3E:3D:4F:AC:2C:BB:2E:86:E2:A3:76:8F:E5:93:2A:CF:A5:AB:C8:5C:8D:4B:06:FF:12:46:AC:78:CB:14:07:35:E0:A9:DF:8B:E9:AF:15:4F:16:89:5B:BD:F6:8D:C6:59:AE:88:85:0E:C1:89:EB:1F:67:C5:45:8E:FF:6D:37:36:2B:78:66:83:91:51:2B:3D:FF:51:77:76:62:A1:EC:67:3E:3E:81:83:E0:56:A9:50:1F:1F:7A:99:AB:63:BF:84:17:77:F1:0D:3B:DF:F7:9C:61:B3:35:98:8A:3A:B2:EC:3C:1A:37:3F:7E:8F:92:CF:D9:12:14:64:DA:10:02:15:41:FF:4F:C4:EB:1C:A3:C9:FA:99:F7:46:E9:E1:18:D9:B1:B8:32:2D:CB:14:0C:50:D8:83:65:83:EE:B9:5C:CF:CB:05:5A:4C:FA:19:97:6B:D6:5D:13:D3:C2:5C:54:BC:32:73:A0:78:F5:F1:6D:1E:CB:9F:A5:A6:9F:22:DC:D1:51:9E:82:79:64:60:29:13:3E:A3:FD:4F:72:6A:AB:E2:D4:E5:B8:24:55:2C:44:4B:8A:88:44:9C:CA:84:D3:2A:3B
+* dates de validité : 06/02/2017 - 06/02/2042
+* identification de l'organisme : CERTSIGN SA
+
 #### \[Exercice 2.2\]
-1. Rechercher le programme de certification de Mozilla (https://wiki.mozilla.org/CA) et trouver la liste des certificats CA.
-2. Evaluer les différents algorithmes à clé publique utilisés
-3. Existe-t-il un certificat racine CA non conforme aux recommandations de l'ANSSI pour les algorithmes à clé publique ?
-4. Expliquer pourquoi cela peut arriver
+1. La liste des certificats des CA pour mozilla se trouve sur le site web
+> https://ccadb-public.secure.force.com/mozilla/PublicAllIntermediateCerts
+
+2. Les algorithmes utilisés sont majoritairement RSA avec une clé comprise entre 2048 et 4096 bits. 
+3. Les certificats créés avec des algorithmes RSA avec une clé de 2048 bits précédemment évoqués sont dépréciés depuis 2017 mais encore très utilisés. Cela provoque donc une perte de sécurité.
+4. Tous les sites ne manipulent pas des données spécifiquement sensibles ou personnelles. Les transferts ne doivent ainsi pas forcément être plus sécurisés. Par ailleurs, les coûts de changement, les temps de nouvelle acceptation de la CA racine ainsi que les temps de calcul pour des petits sites / organisations qui ne manipulent pas des données sensibles ne valent pas cette mise à jour.
+
 #### \[Exercice 2.3\]
-Générer puis visualiser deux paires de clé RSA. Remarquer que la valeur de la clé publique est toujours e=65537. Comment expliquer cela ?
+Afin de générer les deux paires de clé on utilise : 
+```c
+openssl genrsa -out Clersa.pem 4096
+openssl genrsa -out Clersa2.pem 4096
+```
+Afin de visualiser les deux clés on utilise : 
+```c
+openssl rsa -in Clersa.pem -text -noout
+openssl rsa -in Clersa2.pem -text -noout
+```
+Le nombre 65537 est le plus grand premier connu sous la forme (2^2^n + 1). Il est utilisé en RSA car ce chiffrement nécessite un nombre premier (3 marcherait aussi). Ici, du fait de sa taille, il est le plus apprécié par ce type d'algorithmes. On parle d'exposant de clé.
+cf : https://www.quora.com/Why-is-e-65537-used-for-most-RSA-encryption
+cf : https://en.wikipedia.org/wiki/65,537
+
 #### \[Exercice 2.4\]
 1. Avec la commande cat observer le contenu de l'un des deux fichiers générés (exercice précédent) puis le chiffrer avec AES. Utiliser à nouveau la commande rsa pour visualiser le contenu du fichier.
 2. Quelles sont les différences ?
