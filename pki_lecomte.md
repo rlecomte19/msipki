@@ -129,6 +129,13 @@ openssl rsa -in Clersa.chiffre -text -noout
 
 cf : https://www.appvizer.fr/magazine/services-informatiques/protection-donnees/cryptage-aes
 
+3. Le DEK INFO (à savoir l'entête de la paire de clés) contient : 
+- le mode de chiffrement
+- le nombre de bits utilisé
+- le mode de fonctionnement (cbc...)
+- le vecteur d'initialisation
+- d'autres données intéressantes....
+
 #### \[Exercice 2.5\]
 1. Exporter les parties publiques des clés RSA générées
 2. Utiliser la commande rsa et visualiser les clés publiques. Vous devez préciser l'option -pubin puisque seule la partie publique figure dans le fichier ClersaPublique.pem.
