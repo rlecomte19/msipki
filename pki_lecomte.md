@@ -200,9 +200,40 @@ Les deux empreintes sont en effet différentes.
 ![empreintemodifie](https://user-images.githubusercontent.com/72377954/147127559-b0414cdf-2a99-447a-89b6-5718c1429345.png)
 
 
-3. Générer le MAC du fichier créé avec une clé au choix. Modifier un caractère dans la clé choisie et regénérer le MAC pour observer l'effet avalanche.
-4. Le fichier nomme *signature* est peut-être la signature du fichier nommé *clair* avec la clé publique maClePub.pub. Comment procéder pour vérifier l'authentification avec dgst ?
-5. Essayer avec rsautl et le hash. La signature correspond-elle à celle du fichier en clair ? Quelle est la différence ? (utiliser la sortie hexadécimale - pour obtenir la valeur d'un fichier binaire : cat | od -A n -t xl)
+2. On commence par récupérer le code d'authentification du fichier avec la clé ***2485*** :
+```bash
+openssl dgst -sha256 -hmac 2485 -out fichierquelconque.mac fichierquelconque 
+```
+On obtient donc : 
+
+![mac1](https://user-images.githubusercontent.com/72377954/147129824-bb49c5d0-3bf0-43cc-ad87-47850eb68377.png)
+
+On change un seul chiffre de la clé (***2484***): 
+```bash
+openssl dgst -sha256 -hmac 2484 -out fichierquelconque.mac fichierquelconque 
+```
+On obtient désormais un code différent
+
+![mac2](https://user-images.githubusercontent.com/72377954/147129980-64aeff9b-240d-4a2d-8e66-cf72406ae4aa.png)
+
+3. J'ai vérifié la cohérence du fichier *clair* avec la *signature* :
+```bash
+openssl dgst -signature signature -verify maClePub.pub empreinteclairmd5
+```
+Le résultat obtenu est :
+> Verification OK
+
+4. J'ai envoyé la vérification dans un fichier testClair :
+```bash
+openssl rsautl -verify -in signature -pubin -inkey maClePub.pub -out testClair
+```
+Ensuite j'ai affiché ***testClair*** et ***signature*** :
+```bash
+cat testClair | od -A n -t x1
+cat signature | od -A n -t x1
+```
+Les deux valeurs hexadécimales de ces fichiers sont différentes.
+
 #### \[Exercice 2.8\]
 Générer une paire de clés RSA d'une taille de 4096 bits nommée *rsakey.pem* et exporter la partie publique dans un fichier *rsakey.pub*.
 
