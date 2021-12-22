@@ -137,16 +137,72 @@ cf : https://www.appvizer.fr/magazine/services-informatiques/protection-donnees/
 - d'autres données intéressantes....
 
 #### \[Exercice 2.5\]
-1. Exporter les parties publiques des clés RSA générées
-2. Utiliser la commande rsa et visualiser les clés publiques. Vous devez préciser l'option -pubin puisque seule la partie publique figure dans le fichier ClersaPublique.pem.
+1. L'export de la partie publique des RSA se fait grâce à l'option ***-pubout*** : 
+```bash
+openssl rsa -in Clersa.pem -pubout -out Clersa.pub
+openssl rsa -in Clersa2.pem -pubout -out Clersa2.pub
+```
+2. On visualise désormais clé publique grâce à l'option ***-pubin*** :
+```
+openssl rsa -pubin -in Clersa.pem -text -noout
+openssl rsa -pubin -in Clersa2.pem -text -noout
+```
+On obtient :
+
+> Première clé
+
+![clersapublique](https://user-images.githubusercontent.com/72377954/147122095-cadd3281-4737-43cb-b281-162e2109a068.png)
+
+> Seconde clé
+
+![clersa2publique](https://user-images.githubusercontent.com/72377954/147122084-f2e2a8f7-87aa-4de8-ab20-fdccd8306cea.png)
+
 #### \[Exercice 2.6\]
-1. Utiliser le générateur de nombre pseudo-aléatoire d'Openssl avec la commande ***rand*** pour construire une clé de session de 256 bits. Utiliser -base64 ou -hex.
-2. CHiffrer la clé de session avec la clé publique du destinataire (vous pouvez aussi utiliser les deux clés générées dans l'exercice 3.2 pour faire les deux rôles expéditeur et destinataire ou demandez la clé publique de l'un de vos camarades). Le destinataire réceptionne le mesage et le déchiffre avec sa clé privée pour découvrir la clé de session.
+1. J'ai utilisé la commandez ***openssl rand*** afin de créer cette clé de session :
+```bash
+openssl rand -hex 256 > session_key.pem
+```
+
+![sessionkey](https://user-images.githubusercontent.com/72377954/147123124-7c381e2e-9e38-4e1e-9d0c-e6158e2fa018.png)
+
+4. On chiffre cette clé avec la clé publique ***Clersa.pub*** créée précédemment : 
+```bash
+openssl enc -aes-256-cbc -salt -in session_key.pem -out session_key.enc -pass file:./Clersa.pub
+```
+
 #### \[Exercice 2.7\]
-1. Créer un fichier avec un texte quelconque, générer son empreinte (fonction de hashage recommandée par l'ANSSI) puis modifier un octet et regénérer l'empreinte. Observer les deux empreintes. 
-2. Générer le MAC du fichier créé avec une clé au choix. Modifier un caractère dans la clé choisie et regénérer le MAC pour observer l'effet avalanche.
-3. Le fichier nomme *signature* est peut-être la signature du fichier nommé *clair* avec la clé publique maClePub.pub. Comment procéder pour vérifier l'authentification avec dgst ?
-4. Essayer avec rsautl et le hash. La signature correspond-elle à celle du fichier en clair ? Quelle est la différence ? (utiliser la sortie hexadécimale - pour obtenir la valeur d'un fichier binaire : cat | od -A n -t xl)
+1. J'ai premièrement créé un fichier en le remplissant avec ***vim*** : 
+```bash
+vim fichierquelconque
+```
+![fichierquelconque](https://user-images.githubusercontent.com/72377954/147126568-d76b7c5c-3cae-403f-90ea-98ab4ba9f254.png)
+
+J'ai par la suite recherché les algorithmes de hashage recommandés par l'ANSSI : 
+
+> https://www.ssi.gouv.fr/uploads/2021/03/anssi-guide-selection_crypto-1.0.pdf
+
+J'ai ainsi opté pour l'agorithme SHA-3 : 
+![anssirec](https://user-images.githubusercontent.com/72377954/147126403-24ee5815-26ae-41d5-8590-083e5cd08b6b.png)
+
+On obtient donc le calcul de l'empreinte par : 
+```bash
+openssl dgst -SHA256 -out empreinte_quelconque fichierquelconque
+```
+On visualise désormais cette empreinte :
+
+![empreinte](https://user-images.githubusercontent.com/72377954/147127088-408d3785-82c1-4320-a92f-b2a771d85c6e.png)
+
+On enlève ensuite le *!* du fichier créé et on regénère l'emprunte. 
+#### NOTA BENE : un caractère occupe 1 octet mémoire sur ma VM 
+
+Les deux empreintes sont en effet différentes. 
+
+![empreintemodifie](https://user-images.githubusercontent.com/72377954/147127559-b0414cdf-2a99-447a-89b6-5718c1429345.png)
+
+
+3. Générer le MAC du fichier créé avec une clé au choix. Modifier un caractère dans la clé choisie et regénérer le MAC pour observer l'effet avalanche.
+4. Le fichier nomme *signature* est peut-être la signature du fichier nommé *clair* avec la clé publique maClePub.pub. Comment procéder pour vérifier l'authentification avec dgst ?
+5. Essayer avec rsautl et le hash. La signature correspond-elle à celle du fichier en clair ? Quelle est la différence ? (utiliser la sortie hexadécimale - pour obtenir la valeur d'un fichier binaire : cat | od -A n -t xl)
 #### \[Exercice 2.8\]
 Générer une paire de clés RSA d'une taille de 4096 bits nommée *rsakey.pem* et exporter la partie publique dans un fichier *rsakey.pub*.
 
