@@ -236,6 +236,14 @@ Les deux valeurs hexadécimales de ces fichiers sont différentes.
 
 #### \[Exercice 2.8\]
 Générer une paire de clés RSA d'une taille de 4096 bits nommée *rsakey.pem* et exporter la partie publique dans un fichier *rsakey.pub*.
+On génère la paire de clé avec : 
+```bash
+openssl genrsa -out rsakey.pem 4096
+```
+Puis on récupère sa partie publique dans rsakey.pub
+```bash
+openssl rsa -in rsakey.pem -pubout -out rsakey.pub
+```
 
 #### \[Exercice 2.10\]
 Créer un certificat signé pour la clé pkey.pem.
