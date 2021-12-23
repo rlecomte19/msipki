@@ -245,8 +245,47 @@ Puis on récupère sa partie publique dans rsakey.pub
 openssl rsa -in rsakey.pem -pubout -out rsakey.pub
 ```
 
+#### \[Exercice 2.9\]
+J'ai tout d'abord créé une paire de clé RSA basique en 4096 bits : 
+```bash
+openssl genrsa -out cakey.pem 4096
+```
+
+Par la suite, je crée mon autorité de certification avec : 
+```bash
+openssl req -new -x509 -days 365 -key cakey.pem -out cacrt.crt
+```
+Une fois cela fait, j'ai généré une nouvelle requête de certificat : 
+```bash
+openssl req -new -key cakey.pem -out pkeyrep.csr
+```
+Finalement, j'ai auto-signé ce nouveau certificat :
+```bash
+openssl x509 -req -in pkeyreq.csr -out myca.crt -CA cacrt.crt -CAkey cakey.pem -CAcreateserial -CAserial ca.srl –days 365
+```
+
+Résultat obtenu : 
+
+![autosign](https://user-images.githubusercontent.com/72377954/147171908-e33e660e-24e4-4046-b33e-e2059ef53047.png)
+
 #### \[Exercice 2.10\]
-Créer un certificat signé pour la clé pkey.pem.
-* créer une clé pour l'AC à l'aide d'une des courbes du Logarithme discret sur courbes elliptiques (EC-DLOG) recommandée par l'ANSSI. Enquêter sur "openssl ecparam" et "openssl ec"
-* créer un certificat racine et l'auto signer
-* générer un certificat avec le CSR et la clé. Le signer avec la clé racine de la CA.
+Pour commencer, j'ai recherché les courbes du Logarithme discret recommandées par l'ANSSI : 
+
+> https://www.ssi.gouv.fr/uploads/2021/03/anssi-guide-selection_crypto-1.0.pdf
+
+![recomanssicourbes](https://user-images.githubusercontent.com/72377954/147172097-f2c64870-9a08-40ef-8cfd-daa811a5834f.png)
+
+En utilisant l'algorithme ED25519, j'ai donc créé une clé :
+```bash
+openssl genpkey -algorithm ED25519 > mypkey.key
+```
+
+Par la suite, j'ai initialisé une requête de certificat :
+```bash
+openssl req -new -out mycsr.csr -key mypkey.key
+```
+Finalement, j'ai pu signé ma requête de certificat avec :
+```bash
+openssl x509 -req -days 700 -in mycsr.csr -signkey mypkey.key -out mycrt.crt
+
+```
