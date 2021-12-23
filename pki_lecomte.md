@@ -287,5 +287,8 @@ openssl req -new -out mycsr.csr -key mypkey.key
 Finalement, j'ai pu signé ma requête de certificat avec :
 ```bash
 openssl x509 -req -days 700 -in mycsr.csr -signkey mypkey.key -out mycrt.crt
-
 ```
+
+![mycacrt](https://user-images.githubusercontent.com/72377954/147173440-84ac8037-126b-4ec7-939a-adac64e3a751.png)
+
+
